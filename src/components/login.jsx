@@ -4,6 +4,7 @@ import Error from './error'
 import useFetch from '../hooks/use-fetch';
 import { login } from '../db/apiAuth';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { UrlState } from '../context';
 const Login = () => {
     const [errors, setErrors] = useState([])
     const [searchParams] = useSearchParams() 
@@ -25,10 +26,12 @@ const Login = () => {
 
     }
     const {data,loading,error,fn:fnLogin} = useFetch(login,formData)
+    const {fetchUser} = UrlState()
 
     useEffect(()=>{
         if(error=== null && data){
             navigate(`/dashboard?${longLink ? `createNew=${longLink}`:'' }`)
+            fetchUser()
         }
     },[data,error])
 
@@ -100,7 +103,11 @@ const Login = () => {
                     errors.password && <Error message={errors.password} />
                 }
             </div>
-            <button className='btn btn-primary'>Login</button>
+            <button className='btn btn-primary' disabled={loading}>
+                {
+                    loading &&  <span className="loading loading-spinner"></span>
+                }
+                Login</button>
         </form>
     )
 }
