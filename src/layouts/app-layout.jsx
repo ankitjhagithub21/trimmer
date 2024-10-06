@@ -7,7 +7,7 @@ const AppLayout = () => {
     return (
         <div>
             <Header/>
-            <main className='min-h-screen container'>
+            <main className='min-h-screen container mx-auto'>
                 <Outlet/>
             </main>
             <Footer/>
