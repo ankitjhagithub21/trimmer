@@ -1,13 +1,15 @@
 import {Link} from 'react-router-dom'
 
 const Header = () => {
+  const user = null
   return (
     <header>
       <div className="navbar bg-base-100 container mx-auto">
         <div className="flex-1">
           <Link to={"/"} className="btn btn-ghost text-xl">Trimmer</Link>
         </div>
-        <div className="flex-none gap-2">
+        {
+          user ? <div className="flex-none gap-2">
 
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
@@ -27,7 +29,8 @@ const Header = () => {
             </li>
             </ul>
           </div>
-        </div>
+        </div> : <button className='btn btn-primary'>Login</button>
+        }
       </div>
     </header>
   )
