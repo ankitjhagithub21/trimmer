@@ -22,7 +22,7 @@ const Auth = () => {
         })
        }
       </div>
-      <div className='max-w-lg mx-auto my-12'>
+      <div className='max-w-lg mx-auto my-12 px-5 md:px-0'>
         {
           currPage === "login" ? <Login /> : <Signup />
         }
