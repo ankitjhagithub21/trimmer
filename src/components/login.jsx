@@ -1,13 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { object, string } from 'yup';
 import Error from './error'
+import useFetch from '../hooks/use-fetch';
+import { login } from '../db/apiAuth';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 const Login = () => {
     const [errors, setErrors] = useState([])
+    const [searchParams] = useSearchParams() 
+    const longLink = searchParams.get("createNew")
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     })
-
+    const navigate = useNavigate()
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
@@ -19,6 +24,13 @@ const Login = () => {
         ))
 
     }
+    const {data,loading,error,fn:fnLogin} = useFetch(login,formData)
+
+    useEffect(()=>{
+        if(error=== null && data){
+            navigate(`/dashboard?${longLink ? `createNew=${longLink}`:'' }`)
+        }
+    },[data,error])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -29,6 +41,10 @@ const Login = () => {
                 password: string().min(6, "Password must be atleast 6 characters.").required("Password is required.")
             });
             await userSchema.validate(formData, { abortEarly: false })
+
+            await fnLogin()
+            
+            
         } catch (error) {
             const newErrors = {}
             error?.inner?.forEach((err) => {
@@ -40,7 +56,11 @@ const Login = () => {
     }
     return (
         <form className='flex flex-col gap-5' onSubmit={handleSubmit}>
-
+            <h1 className='text-3xl font-bold'>Login</h1>
+            <p>to your account if you already have one</p>
+            {
+                error && <Error message={error.message}/>
+            }
             <div>
                 <label className="input input-primary flex items-center gap-2">
                     <svg
